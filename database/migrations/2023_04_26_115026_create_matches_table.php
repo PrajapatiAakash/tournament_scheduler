@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('teams', function (Blueprint $table) {
+        Schema::create('matches', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tournament_id');
-            $table->unsignedBigInteger('group_id');
-            $table->string('name');
-            $table->integer('points')->default(0);
+            $table->unsignedBigInteger('teama_id');
+            $table->unsignedBigInteger('teamb_id');
+            $table->enum('round_type', ['league_stage', 'quarter_final', 'semi_final', 'final']);
+            $table->unsignedBigInteger('winner_team_id');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teams');
+        Schema::dropIfExists('matches');
     }
 };

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TournamentSchedulerRequest;
 use App\Models\Tournament;
 use App\Models\Group;
+use App\Models\Team;
+use App\Services\ScheduleMatchesService;
 
 class TournamentController extends Controller
 {
@@ -15,7 +17,11 @@ class TournamentController extends Controller
     public function scheduler(TournamentSchedulerRequest $request)
     {
         $tournament = $this->addTournament($request->get('tournament_name'));
-        $this->addGroupsTeams($tournament->id, $request->get('groupa_teams'));
+        $groupA = $this->addGroup($tournament->id, config('app.group_names')[0]);
+        $groupB = $this->addGroup($tournament->id, config('app.group_names')[1]);
+        $this->addTeams($tournament->id, $groupA, $request->get('groupa_teams'));
+        $this->addTeams($tournament->id, $groupB, $request->get('groupa_teams') + 1);
+        (new ScheduleMatchesService($tournament->id, $request->get('groupa_teams')))->schedule();
     }
 
     /**
@@ -30,26 +36,43 @@ class TournamentController extends Controller
     }
 
     /**
-     * This function is used for add the groups and teams
-     * @params int $tournament_id
-     * @params int $noOfTeams
+     * This function is used for add the group
+     * @params int $tournamentId
+     * @params string $name
      */
-    private function addGroupsTeams($tournament_id, $noOfTeams)
+    private function addGroup($tournamentId, $name)
     {
-        $groupA = $this->addGroup($tournament_id, config('app.group_names')[0]);
-        $groupB = $this->addGroup($tournament_id, config('app.group_names')[1]);
-        
+        return Group::create([
+            'tournament_id' => $tournamentId,
+            'name' => $name
+        ]);
     }
 
     /**
      * This function is used for add the group
-     * @params int $tournament_id
+     * @params int $tournamentId
+     * @params obj $group
+     * @params int $totalNoOfTeams
+     */
+    private function addTeams($tournamentId, $group, $totalNoOfTeams)
+    {
+        for ($i = 1; $i <= $totalNoOfTeams; $i++) {
+            $teamName = $group->name . "-Team-" . $i;
+            $this->addTeam($tournamentId, $group->id, $teamName);
+        }
+    }
+
+    /**
+     * This function is used for add the team
+     * @params int $tournamentId
+     * @params int $groupId
      * @params string $name
      */
-    private function addGroup($tournament_id, $name)
+    private function addTeam($tournamentId, $groupId, $name)
     {
-        return Group::create([
-            'tournament_id' => $tournament_id,
+        return Team::create([
+            'tournament_id' => $tournamentId,
+            'group_id' => $groupId,
             'name' => $name
         ]);
     }
