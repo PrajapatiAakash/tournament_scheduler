@@ -19,6 +19,9 @@ return new class extends Migration
             $table->unsignedBigInteger('group_id');
             $table->string('name');
             $table->integer('points')->default(0);
+            $table->integer('total_number_of_matches')->default(0);
+            $table->integer('total_number_of_winning_matches')->default(0);
+            $table->integer('total_number_of_losing_matches')->default(0);
             $table->timestamps();
         });
     }

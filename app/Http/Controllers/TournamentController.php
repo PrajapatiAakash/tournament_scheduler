@@ -6,6 +6,7 @@ use App\Http\Requests\TournamentSchedulerRequest;
 use App\Models\Tournament;
 use App\Models\Group;
 use App\Models\Team;
+use App\Models\TMatch;
 use App\Services\ScheduleMatchesService;
 
 class TournamentController extends Controller
@@ -22,6 +23,8 @@ class TournamentController extends Controller
         $this->addTeams($tournament->id, $groupA, $request->get('groupa_teams'));
         $this->addTeams($tournament->id, $groupB, $request->get('groupa_teams') + 1);
         (new ScheduleMatchesService($tournament->id, $request->get('groupa_teams')))->schedule();
+
+        return redirect()->route('tournament.view', ['id' => $tournament->id]);
     }
 
     /**
@@ -57,7 +60,7 @@ class TournamentController extends Controller
     private function addTeams($tournamentId, $group, $totalNoOfTeams)
     {
         for ($i = 1; $i <= $totalNoOfTeams; $i++) {
-            $teamName = $group->name . "-Team-" . $i;
+            $teamName = "Team-" . $i;
             $this->addTeam($tournamentId, $group->id, $teamName);
         }
     }
@@ -75,5 +78,21 @@ class TournamentController extends Controller
             'group_id' => $groupId,
             'name' => $name
         ]);
+    }
+
+    /**
+     * This function is used for display the tournament view
+     * @params int $tournamentId
+     */
+    public function view($tournamentId)
+    {
+        $groups = Group::with('teams')
+            ->where('tournament_id', $tournamentId)->get();
+        $matches = TMatch::with(['teamAName', 'teamBName', 'winningTeamName'])
+            ->where('tournament_id', $tournamentId)
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return view('tournament_view', compact('groups', 'matches'));
     }
 }

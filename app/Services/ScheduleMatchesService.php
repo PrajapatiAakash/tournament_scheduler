@@ -27,9 +27,9 @@ class ScheduleMatchesService
         if ($this->noOfTeams > 4) {
             $this->scheduleLeagueMatches();
         }
-        $this->scheuleQuarterFinalMatches();
-        $this->scheuleSemiFinal();
-        $this->scheuleFinal();
+        //$this->scheuleQuarterFinalMatches();
+        //$this->scheuleSemiFinal();
+        //$this->scheuleFinal();
     }
 
     /**
@@ -45,14 +45,21 @@ class ScheduleMatchesService
                 for ($i = 0; $i < count($teams); $i++) {
                     for ($j = $i + 1; $j < count($teams); $j++) {
                         $scheduleTeams = [$teams[$i]['id'], $teams[$j]['id']];
+                        $winningTeamKey = array_rand($scheduleTeams);
+                        $losingTeamKey = 0;
+                        if ($winningTeamKey == 0) {
+                            $losingTeamKey = 1;
+                        }
                         $data = [
+                            'tournament_id' => $this->tournamentId,
                             'teama_id' => $teams[$i]['id'],
                             'teamb_id' => $teams[$j]['id'],
                             'round_type' => $this->roundTypes['league_stage'],
-                            'winner_team_id' => $scheduleTeams[array_rand($scheduleTeams)]
+                            'winner_team_id' => $scheduleTeams[$winningTeamKey]
                         ];
                         $match = $this->addMatch($data);
-                        $this->addPointsToTeam($data['winner_team_id']);
+                        $this->updateWinningTeam($scheduleTeams[$winningTeamKey]);
+                        $this->updateLosingTeam($scheduleTeams[$losingTeamKey]);
                     }    
                 }
             }
@@ -72,8 +79,26 @@ class ScheduleMatchesService
      * This function is used for save the match
      * @params int $teamId
      */
-    private function addPointsToTeam($teamId)
+    private function updateWinningTeam($teamId)
     {
-        return Team::where('id', $teamId)->increment('points', 2);
+        return Team::where('id', $teamId)
+            ->update([
+                'points' => \DB::raw( 'points + 2' ),
+                'total_number_of_matches' => \DB::raw( 'total_number_of_matches + 1' ),
+                'total_number_of_winning_matches' => \DB::raw( 'total_number_of_winning_matches + 1' )
+            ]);
+    }
+
+    /**
+     * This function is used for save the match
+     * @params int $teamId
+     */
+    private function updateLosingTeam($teamId)
+    {
+        return Team::where('id', $teamId)
+            ->update([
+                'total_number_of_matches' => \DB::raw( 'total_number_of_matches + 1' ),
+                'total_number_of_losing_matches' => \DB::raw( 'total_number_of_losing_matches + 1' )
+            ]);
     }
 }

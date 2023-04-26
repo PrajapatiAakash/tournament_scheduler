@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Add Tournament</title>
+        <title>Tournament View</title>
 
         <!-- Fonts -->
         <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -26,32 +26,44 @@
             <div class="sm:mx-auto sm:w-full sm:max-w-sm">
                 <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
             </div>
-            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form class="space-y-6" action="{{route('tournament.scheduler')}}" method="POST">
-                    @csrf
-                    <div>
-                        <label for="tournament_name" class="block text-sm font-medium leading-6 text-gray-900">Tournament Name</label>
-                        <div class="mt-2">
-                            <input id="tournament_name" name="tournament_name" type="text" autocomplete="tournament_name" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('tournament_name')border border-red-500 @enderror" value="{{old('tournament_name')}}">
+            <div class="container mt-10 sm:mx-auto sm:w-full">
+                <div class="rounded border">
+                    <!-- Tabs -->
+                    <ul id="tabs" class="inline-flex pt-2 px-1 w-full border-b">
+                        <li class="bg-white px-4 text-gray-800 font-semibold py-2 rounded-t border-t border-r border-l -mb-px"><a id="default-tab" href="#first">Matches</a></li>
+                        <li class="px-4 text-gray-800 font-semibold py-2 rounded-t"><a href="#second">Points Table</a></li>
+                    </ul>
+                    <!-- Tab Contents -->
+                    <div id="tab-contents">
+                        <div id="first" class="p-4">
+                            <x-match-list :matches="$matches" />
                         </div>
-                        @error('tournament_name')
-                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                        @enderror                        
-                    </div>
-                    <div>
-                        <label for="groupa_teams" class="block text-sm font-medium leading-6 text-gray-900">Group A Total Number Of Teams</label>
-                        <div class="mt-2">
-                            <input id="groupa_teams" name="groupa_teams" type="number" autocomplete="groupa_teams" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('groupa_teams')border border-red-500 @enderror" value="{{old('groupa_teams')}}">
+                        <div id="second" class="hidden p-4">
+                            <x-points-table :groups="$groups" />
                         </div>
-                        @error('groupa_teams')
-                            <p class="mt-2 text-sm text-red-600 dark:text-red-500">{{ $message }}</p>
-                        @enderror     
                     </div>
-                    <div>
-                        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
-                    </div>
-                </form>
+                  </div>
             </div>
         </div>
     </body>
 </html>
+<script>
+    let tabsContainer = document.querySelector("#tabs");
+    let tabTogglers = tabsContainer.querySelectorAll("#tabs a");
+    console.log(tabTogglers);
+    tabTogglers.forEach(function(toggler) {
+        toggler.addEventListener("click", function(e) {
+            e.preventDefault();
+            let tabName = this.getAttribute("href");
+            let tabContents = document.querySelector("#tab-contents");
+            for (let i = 0; i < tabContents.children.length; i++) {
+                tabTogglers[i].parentElement.classList.remove("border-t", "border-r", "border-l", "-mb-px", "bg-white");  tabContents.children[i].classList.remove("hidden");
+                if ("#" + tabContents.children[i].id === tabName) {
+                    continue;
+                }
+                tabContents.children[i].classList.add("hidden");
+            }
+            e.target.parentElement.classList.add("border-t", "border-r", "border-l", "-mb-px", "bg-white");
+        });
+    });
+</script>

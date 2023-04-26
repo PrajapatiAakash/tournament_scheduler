@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('matches', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('tournament_id');
             $table->unsignedBigInteger('teama_id');
             $table->unsignedBigInteger('teamb_id');
             $table->enum('round_type', ['league_stage', 'quarter_final', 'semi_final', 'final']);

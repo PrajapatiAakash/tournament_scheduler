@@ -17,6 +17,6 @@ class Group extends Model
      */
     public function teams(): HasMany
     {
-        return $this->hasMany(Team::class);
+        return $this->hasMany(Team::class)->orderBy('points', 'DESC');
     }
 }
