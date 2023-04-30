@@ -16,6 +16,7 @@ class Team extends Model
         'points',
         'total_number_of_matches',
         'total_number_of_winning_matches',
-        'total_number_of_losing_matches'
+        'total_number_of_losing_matches',
+        'is_extra_team'
     ];
 }

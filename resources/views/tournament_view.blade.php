@@ -27,6 +27,9 @@
                 <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
             </div>
             <div class="container mt-10 sm:mx-auto sm:w-full">
+                <h2 class="text-4xl font-normal leading-normal mt-0 mb-2 text-purple-800">
+                    Tournament Name: {{$tournament->name}}
+                </h2>
                 <div class="rounded border">
                     <!-- Tabs -->
                     <ul id="tabs" class="inline-flex pt-2 px-1 w-full border-b">

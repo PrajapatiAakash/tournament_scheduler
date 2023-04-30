@@ -17,24 +17,26 @@ class TournamentController extends Controller
      */
     public function scheduler(TournamentSchedulerRequest $request)
     {
-        $tournament = $this->addTournament($request->get('tournament_name'));
+        $tournament = $this->addTournament($request->get('tournament_name'), $request->get('groupa_teams'));
         $groupA = $this->addGroup($tournament->id, config('app.group_names')[0]);
         $groupB = $this->addGroup($tournament->id, config('app.group_names')[1]);
         $this->addTeams($tournament->id, $groupA, $request->get('groupa_teams'));
-        $this->addTeams($tournament->id, $groupB, $request->get('groupa_teams') + 1);
+        $this->addTeams($tournament->id, $groupB, $request->get('groupa_teams') + 1, true);
         (new ScheduleMatchesService($tournament->id, $request->get('groupa_teams')))->schedule();
 
-        return redirect()->route('tournament.view', ['id' => $tournament->id]);
+        return redirect()->route('tournament.view', ['tournament' => $tournament->id]);
     }
 
     /**
      * This function is used for add the tournament
      * @params string $name
+     * @params int $noOfTeams
      */
-    private function addTournament($name)
+    private function addTournament($name, $noOfTeams)
     {
         return Tournament::create([
-            'name' => $name
+            'name' => $name,
+            'no_of_teams' => $noOfTeams
         ]);
     }
 
@@ -56,12 +58,17 @@ class TournamentController extends Controller
      * @params int $tournamentId
      * @params obj $group
      * @params int $totalNoOfTeams
+     * @params bool $isExtraTeam
      */
-    private function addTeams($tournamentId, $group, $totalNoOfTeams)
+    private function addTeams($tournamentId, $group, $totalNoOfTeams, $isExtraTeam = false)
     {
         for ($i = 1; $i <= $totalNoOfTeams; $i++) {
             $teamName = "Team-" . $i;
-            $this->addTeam($tournamentId, $group->id, $teamName);
+            $extraFields = [];
+            if ($isExtraTeam && $i == $totalNoOfTeams) {
+                $extraFields['is_extra_team'] = true;
+            }
+            $this->addTeam($tournamentId, $group->id, $teamName, $extraFields);
         }
     }
 
@@ -70,29 +77,32 @@ class TournamentController extends Controller
      * @params int $tournamentId
      * @params int $groupId
      * @params string $name
+     * @params array $extraFields
      */
-    private function addTeam($tournamentId, $groupId, $name)
+    private function addTeam($tournamentId, $groupId, $name, $extraFields)
     {
-        return Team::create([
-            'tournament_id' => $tournamentId,
-            'group_id' => $groupId,
-            'name' => $name
-        ]);
+        return Team::create(
+            array_merge([
+                'tournament_id' => $tournamentId,
+                'group_id' => $groupId,
+                'name' => $name
+            ], $extraFields)
+        );
     }
 
     /**
      * This function is used for display the tournament view
-     * @params int $tournamentId
+     * @params obj $tournament
      */
-    public function view($tournamentId)
+    public function view(Tournament $tournament)
     {
         $groups = Group::with('teams')
-            ->where('tournament_id', $tournamentId)->get();
+            ->where('tournament_id', $tournament->id)->get();
         $matches = TMatch::with(['teamAName', 'teamBName', 'winningTeamName'])
-            ->where('tournament_id', $tournamentId)
+            ->where('tournament_id', $tournament->id)
             ->orderBy('id', 'DESC')
             ->get();
 
-        return view('tournament_view', compact('groups', 'matches'));
+        return view('tournament_view', compact('tournament', 'groups', 'matches'));
     }
 }

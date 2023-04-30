@@ -18,4 +18,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('/tournament/scheduler', [TournamentController::class, 'scheduler'])->name('tournament.scheduler');
-Route::get('/tournament/{id}', [TournamentController::class, 'view'])->name('tournament.view');
+Route::get('/tournament/{tournament}', [TournamentController::class, 'view'])->name('tournament.view');

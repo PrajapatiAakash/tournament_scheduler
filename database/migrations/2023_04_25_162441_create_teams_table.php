@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('total_number_of_matches')->default(0);
             $table->integer('total_number_of_winning_matches')->default(0);
             $table->integer('total_number_of_losing_matches')->default(0);
+            $table->boolean('is_extra_team')->default(0);
             $table->timestamps();
         });
     }

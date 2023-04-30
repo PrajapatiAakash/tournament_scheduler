@@ -9,5 +9,5 @@ class Tournament extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'no_of_teams'];
 }
