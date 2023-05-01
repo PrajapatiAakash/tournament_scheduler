@@ -33,20 +33,26 @@
                 <div class="rounded border">
                     <!-- Tabs -->
                     <ul id="tabs" class="inline-flex pt-2 px-1 w-full border-b">
-                        <li class="bg-white px-4 text-gray-800 font-semibold py-2 rounded-t border-t border-r border-l -mb-px"><a id="default-tab" href="#first">Matches</a></li>
-                        <li class="px-4 text-gray-800 font-semibold py-2 rounded-t"><a href="#second">Points Table</a></li>
-                        <li class="px-4 text-gray-800 font-semibold py-2 rounded-t"><a href="#third">Teams</a></li>
+                        <li class="bg-white px-4 text-gray-800 font-semibold py-2 rounded-t border-t border-r border-l -mb-px">
+                            <a id="default-tab" href="#first">Teams</a>
+                        </li>
+                        <li class="px-4 text-gray-800 font-semibold py-2 rounded-t">
+                            <a href="#second">Matches</a
+                        ></li>
+                        <li class="px-4 text-gray-800 font-semibold py-2 rounded-t">
+                            <a href="#third">Points Table</a>
+                        </li>
                     </ul>
                     <!-- Tab Contents -->
                     <div id="tab-contents">
                         <div id="first" class="p-4">
-                            <x-match-list :matches="$matches" />
+                            <x-team-list :groupWiseTeamList="$groupWiseTeamList" />
                         </div>
                         <div id="second" class="hidden p-4">
-                            <x-points-table :groups="$groups" />
+                            <x-match-list :matches="$matches" />
                         </div>
                         <div id="third" class="hidden p-4">
-                            <x-team-list :groupWiseTeamList="$groupWiseTeamList" />
+                            <x-points-table :groups="$groups" />
                         </div>
                     </div>
                   </div>
