@@ -19,3 +19,4 @@ Route::get('/', function () {
 })->name('root');
 Route::post('/tournament/scheduler', [TournamentController::class, 'scheduler'])->name('tournament.scheduler');
 Route::get('/tournament/{tournament}', [TournamentController::class, 'view'])->name('tournament.view');
+Route::get('/tournament', [TournamentController::class, 'index'])->name('tournament.index');

@@ -12,6 +12,17 @@ use App\Services\ScheduleMatchesService;
 class TournamentController extends Controller
 {
     /**
+     * This function is used for list the tournament
+     */
+    public function index()
+    {
+        // get all the sharks
+        $tournaments = Tournament::all();
+
+        return view('tournament.index', compact('tournaments'));
+    }
+
+    /**
      * This function is used for generate the scheduler of tournament
      * @params TournamentSchedulerRequest $request
      */
@@ -116,6 +127,6 @@ class TournamentController extends Controller
             ->orderBy('id', 'DESC')
             ->get();
 
-        return view('tournament_view', compact('tournament', 'groups', 'matches', 'groupWiseTeamList'));
+        return view('tournament.view', compact('tournament', 'groups', 'matches', 'groupWiseTeamList'));
     }
 }

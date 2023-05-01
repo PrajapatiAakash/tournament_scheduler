@@ -27,40 +27,46 @@
                 <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
             </div>
             <div class="container mt-10 sm:mx-auto sm:w-full">
-                <div class="rounded border relative">
+                <div class="rounded border flex">
                     <h2 class="text-4xl font-normal leading-normal mt-0 mb-2 text-purple-800 m-2">
-                        Tournament Name: {{$tournament->name}}
+                        Tournament List
                     </h2>
-                    <a href="{{route('root')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded absolute top-0 right-0">
-                        Create New Tournament
-                    </a>
+                    <div class="justify-end mt-4">
+                        <a href="{{route('root')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">
+                            Create New Tournament
+                        </a>
+                    </div>
                 </div>
                 <div class="rounded border">
-                    <!-- Tabs -->
-                    <ul id="tabs" class="inline-flex pt-2 px-1 w-full border-b">
-                        <li class="bg-white px-4 text-gray-800 font-semibold py-2 rounded-t border-t border-r border-l -mb-px">
-                            <a id="default-tab" href="#first">Teams</a>
-                        </li>
-                        <li class="px-4 text-gray-800 font-semibold py-2 rounded-t">
-                            <a href="#second">Matches</a
-                        ></li>
-                        <li class="px-4 text-gray-800 font-semibold py-2 rounded-t">
-                            <a href="#third">Points Table</a>
-                        </li>
-                    </ul>
-                    <!-- Tab Contents -->
-                    <div id="tab-contents">
-                        <div id="first" class="p-4">
-                            <x-team-list :groupWiseTeamList="$groupWiseTeamList" />
-                        </div>
-                        <div id="second" class="hidden p-4">
-                            <x-match-list :matches="$matches" />
-                        </div>
-                        <div id="third" class="hidden p-4">
-                            <x-points-table :groups="$groups" />
+                    <div class="flex flex-col">
+                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                          <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                            <div class="overflow-hidden">
+                              <table class="min-w-full text-left text-sm font-light">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="px-6 py-4">Tournament Name</th>
+                                        <th scope="col" class="px-6 py-4">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($tournaments as $tournament)
+                                        <tr class="border-b dark:border-neutral-500">
+                                            <td class="whitespace-nowrap px-6 py-4 font-medium">{{$tournament->name}}</td>
+                                            <td class="whitespace-nowrap px-6 py-4">
+                                                <a href="{{route('tournament.view', $tournament->id)}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded">
+                                                    View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
                         </div>
                     </div>
-                  </div>
+                </div>
             </div>
         </div>
     </body>
