@@ -97,12 +97,25 @@ class TournamentController extends Controller
     public function view(Tournament $tournament)
     {
         $groups = Group::with('teams')
-            ->where('tournament_id', $tournament->id)->get();
+            ->where('tournament_id', $tournament->id)
+            ->get();
+        $groupWiseTeamList = [];
+        foreach ($groups as $group) {
+            $teams = $group->teams->sortBy(function($item){
+                    return $item->id;
+                })
+                ->values()
+                ->toArray();
+            $groupWiseTeamList[] = [
+                'name' => $group->name,
+                'teams' => $teams,
+            ];
+        }
         $matches = TMatch::with(['teamAName', 'teamBName', 'winningTeamName'])
             ->where('tournament_id', $tournament->id)
             ->orderBy('id', 'DESC')
             ->get();
 
-        return view('tournament_view', compact('tournament', 'groups', 'matches'));
+        return view('tournament_view', compact('tournament', 'groups', 'matches', 'groupWiseTeamList'));
     }
 }
