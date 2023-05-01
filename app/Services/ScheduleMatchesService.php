@@ -13,6 +13,8 @@ class ScheduleMatchesService
         'semi_final' => 'semi_final',
         'final' => 'final'
     ];
+    private $tournamentId = null;
+    private $noOfTeams = null;
 
     function __construct($tournamentId, $noOfTeams) {
         $this->tournamentId = $tournamentId;
@@ -27,9 +29,9 @@ class ScheduleMatchesService
         if ($this->noOfTeams > 4) {
             $this->scheduleLeagueMatches();
         }
-        $this->scheuleQuarterFinalMatches();
-        $this->scheuleSemiFinal();
-        $this->scheuleFinal();
+        $this->scheduleQuarterFinalMatches();
+        $this->scheduleSemiFinal();
+        $this->scheduleFinal();
     }
 
     /**
@@ -107,7 +109,7 @@ class ScheduleMatchesService
     /**
      * This function is used for schedule the quarter final matches
      */
-    private function scheuleQuarterFinalMatches()
+    private function scheduleQuarterFinalMatches()
     {
         $groupWiseTeams = [];
         if ($this->noOfTeams > 4) {
@@ -164,7 +166,7 @@ class ScheduleMatchesService
     /**
      * This function is used for set the semi final matches
      */
-    private function scheuleSemiFinal()
+    private function scheduleSemiFinal()
     {
         $matches = TMatch::where('tournament_id', $this->tournamentId)
             ->where('round_type', $this->roundTypes['quarter_final'])
@@ -177,7 +179,7 @@ class ScheduleMatchesService
     /**
      * This function is used for set the semi final matches
      */
-    private function scheuleFinal()
+    private function scheduleFinal()
     {
         $matches = TMatch::where('tournament_id', $this->tournamentId)
             ->where('round_type', $this->roundTypes['semi_final'])
