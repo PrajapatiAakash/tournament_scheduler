@@ -27,9 +27,14 @@
                 <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
             </div>
             <div class="container mt-10 sm:mx-auto sm:w-full">
-                <h2 class="text-4xl font-normal leading-normal mt-0 mb-2 text-purple-800">
-                    Tournament Name: {{$tournament->name}}
-                </h2>
+                <div class="rounded border relative">
+                    <h2 class="text-4xl font-normal leading-normal mt-0 mb-2 text-purple-800 m-2">
+                        Tournament Name: {{$tournament->name}}
+                    </h2>
+                    <a href="{{route('root')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 m-2 rounded absolute top-0 right-0">
+                        Create New Tournament
+                    </a>
+                </div>
                 <div class="rounded border">
                     <!-- Tabs -->
                     <ul id="tabs" class="inline-flex pt-2 px-1 w-full border-b">

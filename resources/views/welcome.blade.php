@@ -30,7 +30,7 @@
                 <form class="space-y-6" action="{{route('tournament.scheduler')}}" method="POST">
                     @csrf
                     <div>
-                        <label for="tournament_name" class="block text-sm font-medium leading-6 text-gray-900">Tournament Name</label>
+                        <label for="tournament_name" class="block text-medium font-medium leading-6 text-gray-900">Tournament Name</label>
                         <div class="mt-2">
                             <input id="tournament_name" name="tournament_name" type="text" autocomplete="tournament_name" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('tournament_name')border border-red-500 @enderror" value="{{old('tournament_name')}}">
                         </div>
@@ -39,7 +39,7 @@
                         @enderror                        
                     </div>
                     <div>
-                        <label for="groupa_teams" class="block text-sm font-medium leading-6 text-gray-900">Group A Total Number Of Teams</label>
+                        <label for="groupa_teams" class="block text-medium font-medium leading-6 text-gray-900">Group A Total Number Of Teams</label>
                         <div class="mt-2">
                             <input id="groupa_teams" name="groupa_teams" type="number" autocomplete="groupa_teams" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('groupa_teams')border border-red-500 @enderror" value="{{old('groupa_teams')}}">
                         </div>

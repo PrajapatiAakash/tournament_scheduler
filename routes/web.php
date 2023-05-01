@@ -16,6 +16,6 @@ use App\Http\Controllers\TournamentController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('root');
 Route::post('/tournament/scheduler', [TournamentController::class, 'scheduler'])->name('tournament.scheduler');
 Route::get('/tournament/{tournament}', [TournamentController::class, 'view'])->name('tournament.view');
